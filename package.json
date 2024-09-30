@@ -1,0 +1,22 @@
+{
+    "name": "uds",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "build": "esbuild --format=iife src/index.js --tree-shaking=false --bundle --outfile=dist/bundle.js --minify --sourcemap",
+        "watch": "esbuild --format=iife src/index.js --tree-shaking=false --bundle --outfile=dist/bundle.js --minify --sourcemap --watch"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "gsap": "file:gsap-bonus.tgz",
+        "lenis": "^1.1.13",
+        "swiper": "^11.1.14"
+    },
+    "devDependencies": {
+        "esbuild": "^0.21.3"
+    }
+}
