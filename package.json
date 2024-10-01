@@ -12,8 +12,11 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "dynamic-marquee": "^2.6.4",
         "gsap": "file:gsap-bonus.tgz",
         "lenis": "^1.1.13",
+        "locomotive-scroll": "^5.0.0-beta.21",
+        "marquee3000": "^1.1.1",
         "swiper": "^11.1.14"
     },
     "devDependencies": {

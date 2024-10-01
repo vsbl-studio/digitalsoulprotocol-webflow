@@ -1,9 +1,11 @@
 import Lenis from "lenis";
-import gsap from "gsap";
+import gsap, { selector } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
-
+import Marquee3k from "marquee3000";
 import helloModule from "./modules/helloModule";
+import LocomotiveScroll from "locomotive-scroll";
+
 document.addEventListener("DOMContentLoaded", function () {
     helloModule();
     gsap.registerPlugin(SplitText);
@@ -17,6 +19,33 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     requestAnimationFrame(raf);
+
+    const locomotiveScroll = new LocomotiveScroll();
+
+    Marquee3k.init({
+        selector: "marquee",
+        speed: -1,
+    });
+
+    let previousScrollY = 0;
+
+    window.addEventListener("marqueeScrollEvent", (e) => {
+        const { target, progress } = e.detail;
+
+        const currentScrollY =
+            window.scrollY || document.documentElement.scrollTop;
+        const isScrollingUp = currentScrollY < previousScrollY;
+
+        const maxTranslate = -10; // Maximum translation value in vw
+        const translateValue = maxTranslate * progress;
+
+        // Only update the marquee direction when the scrolling down
+        if (!isScrollingUp) {
+            target.style.transform = `translate3d(${translateValue}vw, 0px, 0px)`;
+        }
+
+        previousScrollY = currentScrollY;
+    });
 
     const revealTitles = document.querySelectorAll(".js-reveal-title");
 
