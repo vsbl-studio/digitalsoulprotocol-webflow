@@ -1,5 +1,5 @@
 import Lenis from "lenis";
-import gsap, { selector } from "gsap";
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import Marquee3k from "marquee3000";
@@ -24,27 +24,85 @@ document.addEventListener("DOMContentLoaded", function () {
 
     Marquee3k.init({
         selector: "marquee",
-        speed: -1,
     });
 
     let previousScrollY = 0;
+    let isScrollingUp = false;
+    let marqueeTranslate = 0;
+    let minTranslate = 0;
+    let maxTranslate = -100;
+    let timer;
 
+    window.addEventListener("scroll", function (e) {
+        const currentScrollY =
+            window.scrollY || document.documentElement.scrollTop;
+        isScrollingUp = currentScrollY < previousScrollY;
+
+        previousScrollY = currentScrollY;
+    });
+    function updateMarqueeTranslate() {
+        const translateStep = 0.05;
+
+        if (isScrollingUp) {
+            marqueeTranslate += translateStep; // Move forward (increase)
+        } else {
+            marqueeTranslate -= translateStep; // Move backward (decrease)
+        }
+
+        if (marqueeTranslate > minTranslate) {
+            marqueeTranslate = maxTranslate; // Reset to start position
+        }
+        if (marqueeTranslate < maxTranslate) {
+            marqueeTranslate = minTranslate; // Reset to start position
+        }
+    }
+
+    // Custom Locomotive Events
     window.addEventListener("marqueeScrollEvent", (e) => {
         const { target, progress } = e.detail;
 
-        const currentScrollY =
-            window.scrollY || document.documentElement.scrollTop;
-        const isScrollingUp = currentScrollY < previousScrollY;
+        const maxTranslateVW = -10; // Maximum translation value in vw
+        const translateValueScroll = maxTranslateVW * progress;
 
-        const maxTranslate = -10; // Maximum translation value in vw
-        const translateValue = maxTranslate * progress;
+        target.style.transform = `translate3d(${translateValueScroll}vw, 0px, 0px)`;
+    });
 
-        // Only update the marquee direction when the scrolling down
-        if (!isScrollingUp) {
-            target.style.transform = `translate3d(${translateValue}vw, 0px, 0px)`;
-        }
+    window.addEventListener("smushFooterImage", (e) => {
+        const { target, progress } = e.detail;
 
-        previousScrollY = currentScrollY;
+        const scaleValue = progress * 2;
+        target.style.scale = "none";
+        target.style.transform = `translate3d(0px, 0px, 0px) scale(1, ${
+            scaleValue <= 1 ? scaleValue : 1
+        })`;
+        target.style.transformOrigin = "bottom";
+        target.style.translate = "none";
+        target.style.rotate = "none";
+    });
+
+    timer = setInterval(() => {
+        updateMarqueeTranslate();
+
+        const marqueeContents = document.querySelectorAll(".marquee-content");
+        marqueeContents.forEach((line) => {
+            line.style.transform = `translate3d(${marqueeTranslate}%, 0, 0)`;
+        });
+    }, 20);
+
+    window.addEventListener("beforeunload", () => {
+        clearInterval(timer);
+    });
+
+    gsap.to(".team_image-wrapper", {
+        scrollTrigger: {
+            trigger: ".team_image-wrapper", // The element you want to pin
+            start: "top+=80px top", // Pin when the element's top reaches the top of the viewport
+            end: "bottom top", // Unpin when the bottom of the element reaches the top of the viewport
+            pin: true, // Enable pinning
+            pinSpacing: false, // Prevent additional space after unpinning
+            scrub: true, // Smooth pinning animation synced to scroll
+            markers: true, // Optional: Show debug markers on the page (you can remove this)
+        },
     });
 
     const revealTitles = document.querySelectorAll(".js-reveal-title");
