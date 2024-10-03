@@ -218,10 +218,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     // Animation
 
-    const buttonTextSLides = document.querySelectorAll(".js-text-slides-up");
+    const teamItems = document.querySelectorAll(".team_item-wrapper");
 
-    if (buttonTextSLides.length) {
-        buttonTextSLides.forEach((btn) => {
+    if (teamItems.length) {
+        teamItems.forEach((item) => {
+            const btn = item.querySelector(".js-text-slides-up");
             const btnHeight = btn.clientHeight;
             const textTop = btn.querySelector(".js-text-top");
             const textBottom = btn.querySelector(".js-text-bottom");
@@ -252,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
             });
             if (!isMobile.any()) {
-                btn.addEventListener("mouseenter", () => {
+                item.addEventListener("mouseenter", () => {
                     gsap.to(btn, {
                         width: textBottom.clientWidth,
                         duration: 0.5,
@@ -260,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
 
                     gsap.to(splitTop.words, {
-                        y: "-" + btnHeight,
+                        y: "-" + (btnHeight + 5),
                         duration: 0.5,
                         stagger: 0.1,
                         ease: "power2.out",
@@ -268,14 +269,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     // Translate bottom line upwards to the position of the top line
                     gsap.to(splitBottom.words, {
-                        y: "-" + btnHeight,
+                        y: "-" + (btnHeight + 5),
                         duration: 0.5,
                         stagger: 0.1,
                         ease: "power2.out",
                     });
                 });
 
-                btn.addEventListener("mouseleave", () => {
+                item.addEventListener("mouseleave", () => {
                     // Reset top line to its original position
                     gsap.to(splitTop.words, {
                         y: 0,
