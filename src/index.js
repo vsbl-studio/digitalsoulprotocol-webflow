@@ -100,7 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("smushHeroImage", (e) => {
         const { target, progress } = e.detail;
 
-        console.log(progress);
         if (progress > 0) {
             target.style.scale = "none";
             target.style.transform = `translate3d(0px, 0px, 0px) scale(1, ${
@@ -130,6 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateMarqueeTranslate();
 
         const marqueeContents = document.querySelectorAll(".marquee-content");
+
         marqueeContents.forEach((line) => {
             line.style.transform = `translate3d(${marqueeTranslate}%, 0, 0)`;
         });
@@ -141,13 +141,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     gsap.to(".team_image-wrapper", {
         scrollTrigger: {
-            trigger: ".team_image-wrapper", // The element you want to pin
-            start: "top+=80px top", // Pin when the element's top reaches the top of the viewport
-            end: "bottom top", // Unpin when the bottom of the element reaches the top of the viewport
-            pin: true, // Enable pinning
-            pinSpacing: false, // Prevent additional space after unpinning
-            scrub: true, // Smooth pinning animation synced to scroll
-            markers: true, // Optional: Show debug markers on the page (you can remove this)
+            trigger: ".team_image-wrapper",
+            start: "top+=80px top",
+            end: "bottom +=80px top",
+            pin: true,
+            pinSpacing: false,
+            scrub: true,
+            markers: false, // Show debug markers on the page
         },
     });
 
@@ -188,6 +188,34 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const contactSmushImages = document.querySelectorAll(".contact_image");
+
+    if (contactSmushImages.length) {
+        let smushParam = 1;
+        let smushDirection = 1;
+        const smushTimer = setInterval(() => {
+            smushParam += smushDirection * 0.01;
+
+            // Reverse direction if smushParam reaches the bounds
+            if (smushParam >= 2.25) {
+                smushDirection = -1; // Start decreasing
+            } else if (smushParam <= 1) {
+                smushDirection = 1; // Start increasing
+            }
+
+            contactSmushImages.forEach((img) => {
+                img.style.scale = "none";
+                img.style.transform = `translate3d(0px, 0px, 0px) scale(1, ${smushParam})`;
+                img.style.transformOrigin = "top";
+                img.style.translate = "none";
+                img.style.rotate = "none";
+            });
+        }, 20);
+
+        window.addEventListener("beforeunload", () => {
+            clearInterval(smushTimer);
+        });
+    }
     // Animation
 
     const buttonTextSLides = document.querySelectorAll(".js-text-slides-up");
