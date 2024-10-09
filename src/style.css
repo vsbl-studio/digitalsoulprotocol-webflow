@@ -1,0 +1,12 @@
+@import "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css";
+@import "./modules/css/case-studies";
+@import "./modules/css/forms";
+@import "./modules/css/marquee";
+@import "./modules/css/nav";
+@import "./modules/css/news";
+@import "./modules/css/swiper";
+@import "./modules/css/team";
+
+body.cursor-hidden {
+    cursor: none !important;
+}

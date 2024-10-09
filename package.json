@@ -5,8 +5,8 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "build": "esbuild --format=iife src/index.js --tree-shaking=false --bundle --outfile=dist/bundle.js --minify --sourcemap",
-        "watch": "esbuild --format=iife src/index.js --tree-shaking=false --bundle --outfile=dist/bundle.js --minify --sourcemap --watch"
+        "build": "esbuild --format=iife src/style.css src/index.js --tree-shaking=false --bundle --outdir=dist --minify --sourcemap",
+        "watch": "esbuild --format=iife src/style.css src/index.js --tree-shaking=false --bundle --outdir=dist --minify --sourcemap --watch"
     },
     "keywords": [],
     "author": "",

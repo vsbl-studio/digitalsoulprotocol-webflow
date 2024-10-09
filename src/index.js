@@ -3,9 +3,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import Marquee3k from "marquee3000";
-import helloModule from "./modules/helloModule";
 import LocomotiveScroll from "locomotive-scroll";
-
+import swiperSliders from "./modules/swiperSliders";
 const isMobile = {
     Android: function () {
         return navigator.userAgent.match(/Android/i);
@@ -37,35 +36,47 @@ const isMobile = {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
-    helloModule();
     gsap.registerPlugin(SplitText);
     gsap.registerPlugin(ScrollTrigger);
 
-    const lenis = new Lenis();
+    const locomotiveScroll = new LocomotiveScroll({
+        lenisOptions: {
+            wrapper: window,
+            content: document.documentElement,
+            lerp: 0.1,
+            duration: 1.2,
+            orientation: "vertical",
+            gestureOrientation: "vertical",
+            smoothWheel: true,
+            smoothTouch: false,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+            normalizeWheel: true,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
+        },
+    });
 
-    function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-    }
+    const lenisInstance = locomotiveScroll.lenisInstance;
 
-    requestAnimationFrame(raf);
-
-    const locomotiveScroll = new LocomotiveScroll();
+    let scrollPosition = lenisInstance.targetScroll;
 
     Marquee3k.init({
         selector: "marquee",
     });
 
-    let previousScrollY = 0;
-    let isScrollingUp = false;
+    // Modules
+    swiperSliders();
     let marqueeTranslate = 0;
     let minTranslate = 0;
     let maxTranslate = -100;
+    let previousScrollY = 0;
+    let currentScrollY = 0;
+    let isScrollingUp = false;
     let timer;
 
     window.addEventListener("scroll", function (e) {
-        const currentScrollY =
-            window.scrollY || document.documentElement.scrollTop;
+        currentScrollY = window.scrollY || document.documentElement.scrollTop;
+
         isScrollingUp = currentScrollY < previousScrollY;
 
         previousScrollY = currentScrollY;
@@ -86,6 +97,20 @@ document.addEventListener("DOMContentLoaded", function () {
             marqueeTranslate = minTranslate; // Reset to start position
         }
     }
+
+    timer = setInterval(() => {
+        updateMarqueeTranslate();
+
+        const marqueeContents = document.querySelectorAll(".marquee-content");
+
+        marqueeContents.forEach((line) => {
+            line.style.transform = `translate3d(${marqueeTranslate}%, 0, 0)`;
+        });
+    }, 20);
+
+    window.addEventListener("beforeunload", () => {
+        clearInterval(timer);
+    });
 
     // Custom Locomotive Events
     window.addEventListener("marqueeScrollEvent", (e) => {
@@ -123,20 +148,6 @@ document.addEventListener("DOMContentLoaded", function () {
             target.style.translate = "none";
             target.style.rotate = "none";
         }
-    });
-
-    timer = setInterval(() => {
-        updateMarqueeTranslate();
-
-        const marqueeContents = document.querySelectorAll(".marquee-content");
-
-        marqueeContents.forEach((line) => {
-            line.style.transform = `translate3d(${marqueeTranslate}%, 0, 0)`;
-        });
-    }, 20);
-
-    window.addEventListener("beforeunload", () => {
-        clearInterval(timer);
     });
 
     gsap.to(".team_image-wrapper", {
@@ -218,8 +229,88 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     // Animation
 
-    const teamItems = document.querySelectorAll(".team_item-wrapper");
+    const textsSlidesUp = document.querySelectorAll(".js-text-slides-up");
 
+    function animateTextSlideUp(wrapper) {
+        wrapper.forEach((item) => {
+            const btnHeight = item.clientHeight;
+            const textTop = item.querySelector(".js-text-top");
+            const textBottom = item.querySelector(".js-text-bottom");
+
+            const splitTop = new SplitText(textTop, { type: "words" });
+            const splitBottom = new SplitText(textBottom, { type: "words" });
+
+            gsap.from(splitTop.words, {
+                y: btnHeight,
+                duration: 0.5,
+                stagger: 0.3,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: item,
+                    start: "top 80%",
+                    toggleActions: "play none none none",
+                },
+            });
+            gsap.from(splitBottom.words, {
+                y: textTop.clientHeight,
+                duration: 0.5,
+                stagger: 0.3,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: item,
+                    start: "top 80%",
+                    toggleActions: "play none none none",
+                },
+            });
+            if (!isMobile.any()) {
+                item.addEventListener("mouseenter", () => {
+                    gsap.to(item, {
+                        duration: 0.5,
+                        ease: "linear",
+                    });
+
+                    gsap.to(splitTop.words, {
+                        y: "-" + (btnHeight + 5),
+                        duration: 0.5,
+                        stagger: 0.1,
+                        ease: "power2.out",
+                    });
+
+                    // Translate bottom line upwards to the position of the top line
+                    gsap.to(splitBottom.words, {
+                        y: "-" + (btnHeight + 5),
+                        duration: 0.5,
+                        stagger: 0.1,
+                        ease: "power2.out",
+                    });
+                });
+
+                item.addEventListener("mouseleave", () => {
+                    // Reset top line to its original position
+                    gsap.to(splitTop.words, {
+                        y: 0,
+                        duration: 0.5,
+                        stagger: 0.1,
+                        ease: "power2.out",
+                    });
+
+                    // Reset bottom line to its original position
+                    gsap.to(splitBottom.words, {
+                        y: 0,
+                        duration: 0.5,
+                        stagger: 0.1,
+                        ease: "power2.out",
+                    });
+                });
+            }
+        });
+    }
+
+    if (textsSlidesUp.length) {
+        animateTextSlideUp(textsSlidesUp);
+    }
+
+    const teamItems = document.querySelectorAll(".team_item-wrapper");
     if (teamItems.length) {
         teamItems.forEach((item) => {
             const btn = item.querySelector(".js-text-slides-up");
@@ -393,6 +484,147 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    const newsHeader = document.querySelector(".news_head");
+    const newsGrid = document.querySelector(".news_grid");
+
+    if (newsHeader && newsGrid) {
+        const newsItems = document.querySelectorAll(
+            ".news_collection-list-item"
+        );
+        const newsFilterWrapper = document.querySelector(
+            ".news_category-filter"
+        );
+
+        if (newsItems.length) {
+            newsItems.forEach((item, index) => {
+                const space = document.createElement("div");
+                if ((index + 1) % 3 === 0) {
+                    item.insertAdjacentElement("afterend", space);
+                }
+            });
+        }
+
+        function adjustNewsGridMargin() {
+            if (window.innerWidth >= 992) {
+                newsGrid.style.marginTop = `-${newsHeader.clientHeight}px`;
+            } else {
+                newsGrid.style.marginTop = "";
+            }
+        }
+        adjustNewsGridMargin();
+        window.addEventListener("resize", adjustNewsGridMargin);
+
+        function getNewsFilterWrapperHeigh() {
+            return (
+                newsGrid.clientHeight -
+                newsHeader.clientHeight -
+                newsFilterWrapper.clientHeight -
+                112
+            );
+        }
+        let stickyBottomOffset = getNewsFilterWrapperHeigh();
+
+        if (!isMobile.any() && window.innerWidth >= 992) {
+            setTimeout(() => {
+                gsap.to(newsFilterWrapper, {
+                    scrollTrigger: {
+                        trigger: newsFilterWrapper,
+                        start: "top-=95px top",
+                        end: () => `bottom+=${stickyBottomOffset}px top`,
+                        pin: true,
+                        pinSpacing: false,
+                        markers: false,
+                    },
+                });
+            }, 250);
+        }
+    }
+
+    const newsFilters = document.querySelectorAll(".news_category-list-item");
+
+    const newsItems = document.querySelectorAll(".news_collection-list-item");
+    if (newsFilters.length && newsItems.length) {
+        newsFilters.forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const value = this.getAttribute("data-news-filter");
+                if (value !== "All") {
+                    newsItems.forEach((item) => {
+                        item.style.display = "none";
+                        const catsWrapper = item.querySelector(
+                            ".news_list-item-category-item"
+                        );
+                        if (catsWrapper) {
+                            const wrapperText =
+                                catsWrapper.textContent ||
+                                catsWrapper.innerText; // Get the text inside the div
+                            if (wrapperText.includes(value)) {
+                                item.style.display = "block";
+                            }
+                        }
+                    });
+                } else {
+                    newsItems.forEach((item) => {
+                        item.style.display = "block";
+                    });
+                }
+                // updatescroll();
+
+                stickyBottomOffset = getNewsFilterWrapperHeigh();
+            });
+        });
+    }
+
+    const latestNewsItems = document.querySelectorAll(
+        ".other-news_collection-list-item"
+    );
+
+    if (latestNewsItems.length) {
+        const cloneSpacer = latestNewsItems[0].cloneNode();
+        cloneSpacer.classList.add("cloned");
+
+        cloneSpacer.classList.remove("js-cursor-read");
+        latestNewsItems[0].insertAdjacentElement("afterend", cloneSpacer);
+    }
+    const readHovers = document.querySelectorAll(".js-cursor-read");
+
+    const cursorRead = document.querySelector(".cursor_read");
+
+    if (readHovers.length && cursorRead) {
+        // Smoothly move the cursor using GSAP
+        window.addEventListener("mousemove", (e) => {
+            // const scrollY = lenis.scroll;
+
+            gsap.to(cursorRead, {
+                x: e.clientX,
+                y: e.clientY + currentScrollY,
+                // y: e.clientY,
+                duration: 0.2,
+                ease: "power3.out",
+            });
+        });
+
+        // Show cursor on hover
+        readHovers.forEach((item) => {
+            item.addEventListener("mouseenter", () => {
+                gsap.to(cursorRead, {
+                    scale: 1,
+                    autoAlpha: 1, // make it visible
+                    duration: 0.3,
+                    ease: "power3.out",
+                    delay: 0.2,
+                });
+            });
+
+            item.addEventListener("mouseleave", () => {
+                gsap.to(cursorRead, {
+                    scale: 0,
+                    autoAlpha: 0, // hide the cursor
+                    duration: 0.3,
+                    ease: "power3.out",
+                });
+            });
+        });
+    }
     const currentYear = new Date().getFullYear();
     $(`[data="year"]`).html(currentYear);
 });

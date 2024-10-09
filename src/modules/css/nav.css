@@ -1,0 +1,12 @@
+.nav_mobile .nav_mobile-close-text {
+    display: none;
+}
+.nav_mobile .nav_mobile-open-text {
+    display: block;
+}
+.nav_mobile.open .nav_mobile-open-text {
+    display: none;
+}
+.nav_mobile.open .nav_mobile-close-text {
+    display: block;
+}

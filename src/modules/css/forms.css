@@ -1,0 +1,53 @@
+/* Forms */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 50000s ease-in-out 0s,
+        color 5000s ease-in-out 0s;
+}
+
+.input.has-value + .input_label-floating,
+.input:focus + .input_label-floating {
+    margin-bottom: 2.25rem;
+    padding-top: 0;
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+}
+
+.input-area.has-value + .textarea_label-floating,
+.input-area:focus + .textarea_label-floating {
+    margin-bottom: 2.25rem;
+    padding-top: 0;
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+    top: 0;
+}
+
+.input:not(:placeholder-shown) + .input_label-floating,
+.input:focus + .input_label-floating {
+    margin-bottom: 2.25rem;
+    padding-top: 0;
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+}
+.input-area:not(:placeholder-shown) + .textarea_label-floating,
+.input-area:focus + .textarea_label-floating {
+    margin-bottom: 2.25rem;
+    padding-top: 0;
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+    top: 0;
+}
+#wf-form-Contact-Form {
+    display: flex !important;
+}
+textarea,
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="button"],
+input[type="submit"] {
+    -webkit-appearance: none;
+    border-radius: 0;
+}

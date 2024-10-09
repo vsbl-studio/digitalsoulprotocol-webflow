@@ -1,0 +1,19 @@
+/* Marquee */
+.marquee__copy {
+    padding-right: 2rem;
+    box-sizing: border-box;
+}
+.marquee-content div {
+    padding-right: 2rem;
+}
+.news_marquee-wrapper .marquee__copy {
+    padding-right: 0;
+}
+.news_marquee-wrapper .marquee_line-button {
+    display: inline-block !important;
+    margin-right: 2rem;
+}
+.marquee_line-initial > div,
+.marquee_line-hovered > div {
+    margin-right: 1rem;
+}

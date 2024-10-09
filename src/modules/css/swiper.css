@@ -1,0 +1,14 @@
+/* Swiper */
+.swiper-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.gallery-list-wrapper {
+    overflow: visible !important;
+}
+
+@media (pointer: coarse) {
+    .cursor_read {
+        display: none;
+    }
+}

@@ -1,0 +1,14 @@
+/* Case Studies */
+@media (max-width: 992px) {
+    .case-studies_item-wrapper:nth-child(even) .case-studies_item-content {
+        flex-flow: row-reverse;
+        flex-wrap: wrap;
+    }
+}
+.case-studies_item-wrapper:hover .case-studies_item-hover {
+    height: 100%;
+}
+
+.case-studies_item-wrapper:hover .case-studies_image {
+    transform: scale(1.2);
+}
