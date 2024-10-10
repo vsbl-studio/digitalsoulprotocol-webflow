@@ -41,8 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const locomotiveScroll = new LocomotiveScroll({
         lenisOptions: {
-            wrapper: window,
-            content: document.documentElement,
             lerp: 0.1,
             duration: 1.2,
             orientation: "vertical",
@@ -150,17 +148,23 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    gsap.to(".team_image-wrapper", {
-        scrollTrigger: {
-            trigger: ".team_image-wrapper",
-            start: "top+=80px top",
-            end: "bottom +=80px top",
-            pin: true,
-            pinSpacing: false,
-            scrub: true,
-            markers: false, // Show debug markers on the page
-        },
-    });
+    if (!isMobile.any()) {
+        gsap.to(".team_image-wrapper", {
+            scrollTrigger: {
+                trigger: ".team_image-wrapper",
+                start: "top+=20px top",
+
+                end: () =>
+                    window.innerWidth <= 1440
+                        ? "bottom-=40px top"
+                        : "bottom-=120px top", // Adjust based on screen width
+                pin: true,
+                pinSpacing: false,
+                scrub: true,
+                markers: false, // Show debug markers on the page
+            },
+        });
+    }
 
     const mobileToggle = document.querySelector(".nav_mobile");
     if (mobileToggle) {
@@ -171,30 +175,25 @@ document.addEventListener("DOMContentLoaded", function () {
         mobileToggle.addEventListener("click", function () {
             if (mobileNavScreen.classList.contains("open")) {
                 navLinksReversed.forEach((link, index) => {
-                    setTimeout(() => {
-                        link.querySelector(
-                            ".mobile-link-overlay"
-                        ).style.transform = "translateY(0)";
-                    }, 250 * index); // Increment delay for each item
+                    link.querySelector(".mobile-link-overlay").style.transform =
+                        "translateY(0)";
                 });
 
                 setTimeout(() => {
                     mobileToggle.classList.remove("open");
                     mobileNavScreen.classList.remove("open");
-                }, 250 * navLinksReversed.length);
+                }, 300);
             } else {
                 mobileToggle.classList.add("open");
                 mobileNavScreen.classList.add("open");
 
                 setTimeout(() => {
                     navLinks.forEach((link, index) => {
-                        setTimeout(() => {
-                            link.querySelector(
-                                ".mobile-link-overlay"
-                            ).style.transform = "translateY(100%)";
-                        }, 250 * index); // Increment delay for each item
+                        link.querySelector(
+                            ".mobile-link-overlay"
+                        ).style.transform = "translateY(100%)";
                     });
-                }, 250);
+                }, 350);
             }
         });
     }
@@ -507,37 +506,16 @@ document.addEventListener("DOMContentLoaded", function () {
         function adjustNewsGridMargin() {
             if (window.innerWidth >= 992) {
                 newsGrid.style.marginTop = `-${newsHeader.clientHeight}px`;
+                newsFilterWrapper.style.marginTop = `${newsHeader.clientHeight}px`;
             } else {
                 newsGrid.style.marginTop = "";
+                newsFilterWrapper.style.marginTop = "";
             }
+
+            locomotiveScroll.resize();
         }
         adjustNewsGridMargin();
         window.addEventListener("resize", adjustNewsGridMargin);
-
-        function getNewsFilterWrapperHeigh() {
-            return (
-                newsGrid.clientHeight -
-                newsHeader.clientHeight -
-                newsFilterWrapper.clientHeight -
-                112
-            );
-        }
-        let stickyBottomOffset = getNewsFilterWrapperHeigh();
-
-        if (!isMobile.any() && window.innerWidth >= 992) {
-            setTimeout(() => {
-                gsap.to(newsFilterWrapper, {
-                    scrollTrigger: {
-                        trigger: newsFilterWrapper,
-                        start: "top-=95px top",
-                        end: () => `bottom+=${stickyBottomOffset}px top`,
-                        pin: true,
-                        pinSpacing: false,
-                        markers: false,
-                    },
-                });
-            }, 250);
-        }
     }
 
     const newsFilters = document.querySelectorAll(".news_category-list-item");
@@ -567,9 +545,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         item.style.display = "block";
                     });
                 }
-                // updatescroll();
 
-                stickyBottomOffset = getNewsFilterWrapperHeigh();
+                locomotiveScroll.resize();
             });
         });
     }
@@ -592,12 +569,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (readHovers.length && cursorRead) {
         // Smoothly move the cursor using GSAP
         window.addEventListener("mousemove", (e) => {
-            // const scrollY = lenis.scroll;
-
             gsap.to(cursorRead, {
                 x: e.clientX,
                 y: e.clientY + currentScrollY,
-                // y: e.clientY,
                 duration: 0.2,
                 ease: "power3.out",
             });
