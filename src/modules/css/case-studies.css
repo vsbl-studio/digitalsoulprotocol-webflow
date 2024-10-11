@@ -3,6 +3,7 @@
     .case-studies_item-wrapper:nth-child(even) .case-studies_item-content {
         flex-flow: row-reverse;
         flex-wrap: wrap;
+        justify-content: space-between;
     }
 }
 .case-studies_item-wrapper:hover .case-studies_item-hover {

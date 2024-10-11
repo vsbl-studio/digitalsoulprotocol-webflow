@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    if (!isMobile.any()) {
+    if (!isMobile.any() && window.innerWidth >= 1280) {
         gsap.to(".team_image-wrapper", {
             scrollTrigger: {
                 trigger: ".team_image-wrapper",
@@ -312,7 +312,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const teamItems = document.querySelectorAll(".team_item-wrapper");
     if (teamItems.length) {
         teamItems.forEach((item) => {
-            const btn = item.querySelector(".js-text-slides-up");
+            const btn = item.querySelector(".js-text-slides-up--team-row");
             const btnHeight = btn.clientHeight;
             const textTop = btn.querySelector(".js-text-top");
             const textBottom = btn.querySelector(".js-text-bottom");
