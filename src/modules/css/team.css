@@ -16,10 +16,10 @@
 @media (max-width: 1279.99px) {
     .team_list-item:nth-child(odd) .team_item-image-wrap {
         opacity: 1;
-        transform: rotate(-4deg);
+        transform: translateY(-50%) rotate(-4deg);
     }
     .team_list-item:nth-child(even) .team_item-image-wrap {
         opacity: 1;
-        transform: rotate(4deg);
+        transform: translateY(-50%) rotate(4deg);
     }
 }

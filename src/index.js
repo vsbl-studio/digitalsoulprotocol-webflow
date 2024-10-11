@@ -149,15 +149,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     if (!isMobile.any() && window.innerWidth >= 1280) {
+        let bottomOffset = "bottom-=40px top";
+
+        if (window.innerWidth >= 1440) {
+            bottomOffset = "bottom-=120px top";
+        }
+        if (window.innerWidth >= 1920) {
+            bottomOffset = "bottom-=160px top";
+        }
         gsap.to(".team_image-wrapper", {
             scrollTrigger: {
                 trigger: ".team_image-wrapper",
                 start: "top+=20px top",
-
-                end: () =>
-                    window.innerWidth <= 1440
-                        ? "bottom-=40px top"
-                        : "bottom-=120px top", // Adjust based on screen width
+                end: bottomOffset,
                 pin: true,
                 pinSpacing: false,
                 scrub: true,
