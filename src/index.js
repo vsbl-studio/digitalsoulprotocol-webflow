@@ -4,7 +4,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import Marquee3k from "marquee3000";
 import LocomotiveScroll from "locomotive-scroll";
-import swiperSliders from "./modules/swiperSliders";
+import swiperSliders from "./modules/js/swiperSliders";
+import cookieYes from "./modules/js/cookieYes";
 const isMobile = {
     Android: function () {
         return navigator.userAgent.match(/Android/i);
@@ -64,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Modules
     swiperSliders();
+    cookieYes();
     let marqueeTranslate = 0;
     let minTranslate = 0;
     let maxTranslate = -100;

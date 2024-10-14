@@ -6,7 +6,7 @@
 @import "./modules/css/news";
 @import "./modules/css/swiper";
 @import "./modules/css/team";
-
+@import "./modules/css/cookie-yes";
 body.cursor-hidden {
     cursor: none !important;
 }
