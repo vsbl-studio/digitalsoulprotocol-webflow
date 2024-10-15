@@ -557,6 +557,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const newsPostsCards = document.querySelectorAll(
+        ".news_collection-list-item"
+    );
+
+    const loadMoreNewsMarquee = document.querySelector(".news_marquee-wrapper");
+
+    if (loadMoreNewsMarquee && newsPostsCards.length <= 10) {
+        loadMoreNewsMarquee.style.display = "none";
+    }
     const latestNewsItems = document.querySelectorAll(
         ".other-news_collection-list-item"
     );
