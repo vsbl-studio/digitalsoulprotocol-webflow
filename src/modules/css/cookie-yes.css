@@ -116,6 +116,11 @@
 .cky-accordion-header-des {
     padding-right: 3rem !important;
 }
+@media (max-width: 576px) {
+    .cky-prefrence-btn-wrapper .cky-btn-accept {
+        order: 10 !important;
+    }
+}
 @media (min-width: 768px) {
     .cky-preference-header {
         padding-top: 2rem !important;
@@ -154,24 +159,13 @@
     font-size: 0 !important;
     right: 0 !important;
     z-index: 9 !important;
-    width: 1.5rem !important;
+    width: 1.25rem !important;
     background: transparent !important;
-    height: 1.5rem !important;
+    height: 1.25rem !important;
     border-radius: 0 !important;
-    border: 1px solid #000000 !important;
-
+    border: 2px solid #000000 !important;
     background: no-repeat 60% 50% white !important;
     background-size: 9px auto !important;
-}
-.cky-switch input[type="checkbox"]:after {
-    content: "" !important;
-    width: 500px !important;
-    max-width: 80vw !important;
-    position: absolute !important;
-    top: 0 !important;
-    display: block !important;
-    right: 0 !important;
-    height: 36px !important;
 }
 
 .cky-switch input[type="checkbox"]:before {
@@ -189,7 +183,9 @@
         url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7'><path d='m.7 3.7 2.5 2.5M8.5.7 3.2 6.2' fill='none' stroke='white'/></svg>") !important;
     background-color: black !important;
 }
-
+.cky-switch input[type="checkbox"]:not(:checked):hover {
+    background-color: #0000004d !important;
+}
 [data-cky-tag="detail-powered-by"] {
     display: none !important;
 }
