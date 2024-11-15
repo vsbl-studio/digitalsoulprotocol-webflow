@@ -10,3 +10,13 @@
 body.cursor-hidden {
     cursor: none !important;
 }
+
+/* .digital,
+.soul,
+.protocol {
+    position: relative;
+    transform: translateY(0);
+} */
+.hero_wrapper {
+    min-height: 100vh;
+}

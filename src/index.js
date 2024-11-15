@@ -55,13 +55,141 @@ document.addEventListener("DOMContentLoaded", function () {
         },
     });
 
+    locomotiveScroll.scrollTo("top", {
+        offset: 0,
+        duration: 0,
+    });
+
     const lenisInstance = locomotiveScroll.lenisInstance;
 
     let scrollPosition = lenisInstance.targetScroll;
 
-    Marquee3k.init({
-        selector: "marquee",
-    });
+    // Preloader timeline start
+
+    const preloader = document.querySelector(".loading-wrapper");
+    if (preloader) {
+        gsap.set(".hero_image-vector", {
+            opacity: 0,
+        });
+        gsap.set(".js-marquee-to-words", {
+            opacity: 0,
+        });
+
+        const values = [12, 33, 57, 73, 89, 100];
+        const duration = 0.5;
+
+        const delay = (duration / (values.length - 1)) * 1000; // in milliseconds
+
+        const counterElement = preloader.querySelector(".loading-text");
+        let index = 0;
+
+        const updateCounter = () => {
+            if (index < values.length) {
+                if (counterElement) {
+                    counterElement.textContent = `Loading [ ${values[index]}% ]`;
+                    index++;
+                    if (index < values.length) {
+                        setTimeout(updateCounter, delay);
+                    }
+                }
+            }
+        };
+
+        updateCounter();
+
+        gsap.to(counterElement, {
+            y: -100,
+            delay: 1,
+            duration: 2,
+        });
+
+        setTimeout(() => {
+            gsap.set(".hero_image-vector", {
+                opacity: 1,
+            });
+            gsap.from(".hero_image-vector", {
+                y: "100%",
+                duration: 1,
+                stagger: 0.3,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: ".hero_wrapper",
+                    start: "top 80%",
+                    toggleActions: "play none none none",
+                },
+            });
+        }, 500);
+
+        setTimeout(() => {
+            gsap.set(".js-marquee-to-words", {
+                opacity: 1,
+            });
+
+            const marqueeCopies = document.querySelectorAll(
+                ".js-marquee-to-words"
+            );
+
+            const splitMarquee = new SplitText(marqueeCopies, {
+                type: "words",
+            });
+
+            gsap.from(splitMarquee.words, {
+                y: "120%",
+                duration: 0.75,
+                stagger: 0.25,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: ".hero_wrapper",
+                    start: "top 80%",
+                    toggleActions: "play none none none",
+                },
+            });
+        }, 1000);
+
+        gsap.from(".nav-logotype", {
+            y: "-100%",
+            duration: 0.5,
+            delay: 1.5,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: ".hero_wrapper",
+                start: "top 80%",
+                toggleActions: "play none none none",
+            },
+        });
+        gsap.from(".btn-link", {
+            y: "-100%",
+            duration: 0.5,
+            stagger: 0.25,
+            delay: 2,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: ".hero_wrapper",
+                start: "top 80%",
+                toggleActions: "play none none none",
+            },
+        });
+        Marquee3k.init({
+            selector: "marquee",
+        });
+        setTimeout(() => {
+            preloader.style.display = "none";
+        }, 1500);
+    }
+    setTimeout(() => {
+        window.addEventListener("smushHeroImage", (e) => {
+            const { target, progress } = e.detail;
+            if (progress > 0) {
+                target.style.scale = "none";
+                target.style.transform = `translate3d(0px, 0px, 0px) scale(1, ${
+                    1 + progress
+                })`;
+                target.style.transformOrigin = "top";
+                target.style.translate = "none";
+                target.style.rotate = "none";
+            }
+        });
+    }, 1000);
 
     // Modules
     swiperSliders();
@@ -120,20 +248,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const translateValueScroll = maxTranslateVW * progress;
 
         target.style.transform = `translate3d(${translateValueScroll}vw, 0px, 0px)`;
-    });
-
-    window.addEventListener("smushHeroImage", (e) => {
-        const { target, progress } = e.detail;
-
-        if (progress > 0) {
-            target.style.scale = "none";
-            target.style.transform = `translate3d(0px, 0px, 0px) scale(1, ${
-                1 + progress
-            })`;
-            target.style.transformOrigin = "top";
-            target.style.translate = "none";
-            target.style.rotate = "none";
-        }
     });
 
     window.addEventListener("smushFooterImage", (e) => {
