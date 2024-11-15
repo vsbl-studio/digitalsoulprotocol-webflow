@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
             gsap.from(".hero_image-vector", {
                 y: "100%",
                 duration: 1,
-                stagger: 0.3,
+                stagger: 0.1,
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: ".hero_wrapper",
@@ -135,8 +135,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             gsap.from(splitMarquee.words, {
                 y: "120%",
-                duration: 0.75,
-                stagger: 0.25,
+                duration: 1,
+                stagger: 0.1,
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: ".hero_wrapper",
@@ -160,8 +160,8 @@ document.addEventListener("DOMContentLoaded", function () {
         gsap.from(".btn-link", {
             y: "-100%",
             duration: 0.5,
-            stagger: 0.25,
-            delay: 2,
+            stagger: 0.1,
+            delay: 1.75,
             ease: "power2.out",
             scrollTrigger: {
                 trigger: ".hero_wrapper",
@@ -169,12 +169,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 toggleActions: "play none none none",
             },
         });
-        Marquee3k.init({
-            selector: "marquee",
+        gsap.from(".nav_mobile", {
+            y: "-100%",
+            duration: 0.5,
+            stagger: 0.1,
+            delay: 1.75,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: ".hero_wrapper",
+                start: "top 80%",
+                toggleActions: "play none none none",
+            },
         });
+
         setTimeout(() => {
             preloader.style.display = "none";
-        }, 1500);
+            Marquee3k.init({
+                selector: "marquee",
+            });
+        }, 2000);
     }
     setTimeout(() => {
         window.addEventListener("smushHeroImage", (e) => {
